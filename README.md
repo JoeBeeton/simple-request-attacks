@@ -9,6 +9,9 @@ cd webserver/
 
 This starts the webserver on port 8081.
 
+Or if you dont want to host the payloads yourself. You can accesss the payloads at https://joebeeton.github.io
+
+
 To start up on of the vulnerable services.
 cd into spring-cloud-v1-vuln or spring-boot-hello-world-feature-enum
 and run
